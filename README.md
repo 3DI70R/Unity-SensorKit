@@ -1,31 +1,31 @@
 ![Logo](Images/SensorKitLogo.gif)
-Утилитарные компоненты для работы с Raycast'ами как с игровыми обьектами
+Utility components for working with Raycasts using GameObjects
 
-# Зачем нужна
-Эта библиотека оборачивает методы Physics.**X**Cast and Physics.Overlap**X** в MonoBehavior, и превращает игровой обьект в конфигурируемый сенсор.
-Благодаря ей можно писать код который меньше думает о том как стрельнуть луч, и больше о том, как реагировать если луч куда то попал.
+# What is this
+This library wraps Physics.**X**Cast and Physics.Overlap**X** methods into MonoBehavior, and acts like a configurable sensor.
+With that, you can write logic that is less focused on ray casting logic, and more on reaction when ray hit something.
 
-# Особенности
-* **Выносит логику работы с cast'ами и overlap'ами в отдельный класс.**
-* **Несколько уровней наследования позволяет абстрагировать тип сенсора (Cast или Overlap) и его форму (Луч, Сфера, Капсула, Куб).**
-* **Спроектирована для встраивание в существующую логику**
-* **Корректно применяет на себя все transform'ы, так же, как это бы делал коллайдер.**
-* **Детальное Gizmo для того чтобы видеть абсолютно всю информацию о том, как себя поведёт каст.**
-* **Автоматический выбор метода в зависимости от настроек сенсора.**
-* **В случае если желаемое количество детектов > 1, используются NonAlloc версии методов с переиспользуемым массивом.**
-* **Можно анимировать параметры каста при помощи аниматора, как и любой другой обьект**
+# Features
+* **Wraps all cast/overlap logic into separate class**
+* **Multiple inheritance levels allows to write logic that is independent of sensor type (Cast or Overlap) and its shape (Ray, Sphere, Capsule, Box)**
+* **Designed for embedding into existing logic**
+* **Correctly applies all transforms, like collider with similar shape**
+* **Highly detailed gizmo, so you can see how sensor acts**
+* **Automatic method selection based on sensor settings**
+* **Uses NonAlloc methods with reusable arrays for Multi-Object casts**
+* **Since this is simple behavior, you can animate its values like any other object**
 
 ---
 
-# Использование
-- Добавьте на сцену нужный компонент и настройте параметры детекта
+# Usage
+- Add desired sensor to scene, and configure its detection params
    - **SphereCastSensor** | **BoxCastSensor** | **SphereOverlapSensor** | **BoxOverlapSensor**
-- Добавьте своему игровому обьекту поле того же типа, присвойте туда этот сенсор
-- Вызывайте `UpdateSensor()` когда нужно сделать новый каст/overlap
-- Используйте полученную информацию как угодно
+- Create field in your behavior with same type, assign your sensor in inspector
+- Call `UpdateSensor()` when you need to update your sensor
+- Use obtained information any way you want
 
 ```CS
-public class SensorTest : MonoBehaviour
+public class CharacterObject : MonoBehaviour
 {
     public CastSensor groundSensor;
 
@@ -46,24 +46,24 @@ public class SensorTest : MonoBehaviour
 }
 ```
 
-# Архитектура
-Библиотека спроектирована таким образом, чтобы дать возможность быстро итерировать логику связанную с Cast'ами и Overlap'ами, и быстро переключаться между различными способами взаимодействия с физическим миром не модифицируя при этом код.
+# Architecture
+This library is designed to allow faster Cast/Overlap iteration cycles, and give ability to easily swap between sensor types without code modification.
 
 ![Class Diagram](Images/ClassDiagram.png)
-###### Ray/Capsule касты отсутствуют, потому что являются производными от SphereCast'а. В случае если Radius = 0, используется RayCast, а в случае если Width > 0, используется CapsuleCast. Похожая логика используется и для Overlap'ов
+###### Ray/Capsule casts are absent because they are SphereCast's special cases. If Radius = 0, Ray cast is used for detection, if Width > 0, Capsule cast is used. Similar logic applies to overlap sensors.
 
-Каждый из уровней наследования предлагает функционал, который позволит получать общую информацию о детекте независимо от типа сенсора. Таким образом например, в случае если необходимо всего лишь детектить присутствие какого то обьекта, PhysicsSensor позволит получать общую информацию независимую от типа сенсора (Есть ли попадание и список обьектов). Для кардинальной смены логики, например смены BoxOverlap на SphereCast, не потребуется изменять оригинальный исходник, а просто поменять ссылку на сенсор.
+Every inheritance level has logic that allows to work with results independently of sensor type. So, if you just need to check for object prescence, you can use base class - PhysicsSensor just to get basic information about hit (Is detected something, Collider of detected object). With that, you can assign any sensor to that property, and if you need to change from BoxOverlap to SphereCast, you dont even need to modify your sources, you can just swap your sensor.
 
-Сенсор не обновляется сам по себе, и для его обновления необходимо вызывать `UpdateSensor()`. На это есть несколько причин:
-- Все игровые обьекты используют касты внутри своей логики, и невозможно предугадать в какое время и месте они это сделают.
-- Каст может происходить не каждый кадр
-- Иногда необходимо сделать каст, и хранить результат
+Sensor **is not updated automatically**, you need to call `UpdateSensor()` for that. Here is reasons:
+- Every game object uses casts in his own lifecycle, which can be in update/fixed update/coroutine/whatever
+- There is no guarantee that sensor will be used every frame
+- Often you want to keep last cast information untill next update
 
-# Установка
-В случае если PackageManager вашей версии Unity поддерживает git зависимости, просто добавьте строчку в **Packages\manifest.json**
+# Installation
+If your Unity/PackageManager supports git dependencies, just add this entry into **Packages\manifest.json**
 ```
 "ru.threedisevenzeror.sensorkit": "https://github.com/3DI70R/SensorKit.git"
 ```
-И все компоненты будут загружены и подключены как модуль, не засоряя папку проекта.
+And all these scripts will be included in your project as dependency.
 
-В противном случае, можно просто скопировать файлы из `Assets/Scripts/Runtime` и вставить в проект
+Otherwise, you can just copy files from `Assets/Scripts/Runtime` to your project.
