@@ -15,8 +15,6 @@ With that, you can write logic that is less focused on ray casting logic, and mo
 * **Uses NonAlloc methods with reusable arrays for Multi-Object casts**
 * **Since this is simple behavior, you can animate its values like any other object**
 
----
-
 # Usage
 - Add desired sensor to scene, and configure its detection params
    - **SphereCastSensor** | **BoxCastSensor** | **SphereOverlapSensor** | **BoxOverlapSensor**
@@ -45,6 +43,28 @@ public class CharacterObject : MonoBehaviour
     }
 }
 ```
+
+# Parameters
+![Sensor parameters](Images/Params.png)
+
+Nearly all of sensor parameters are actually Cast/Overlap method parameters, so i think if you need documentation for those, you can easily read detailed info in Unity Documentation. However, there is unique parameters:
+- **Max Results** - Since sensor can detect multiple objects at once, it needs to preallocate array for specific object count, to avoid garbage generation for each cast.
+- **Lazy Allocation** - If there is chance that your sensor will be unused, you may tick this checkbox, to delay array allocation untill first use. This option may save you few nanoseconds, if you are desperate for performance.
+
+# Gizmo
+Each sensor has detailed gizmo, to aid sensor configuration and allow quick wisualization of current sensor behavior
+
+_Gizmo is visible only on selected game objects for peformance reasons_
+![Gizmo](Images/Gizmo.png)
+
+Colors:
+- **Red gizmo**: Nothing Detected
+- **Green line**: Distance that cast has moved untill detection
+- **Green dot**: Point of object stop distance
+- **Yellow line**: Leftover distance, that cast could reach if there were no collision
+- **Blue arrow**: Hit normal
+- **Purple point**: Actual hit position
+- **White triangle**: Highlight of the triangle that was hit (If it is mesh collider)
 
 # Architecture
 This library is designed to allow faster Cast/Overlap iteration cycles, and give ability to easily swap between sensor types without code modification.
