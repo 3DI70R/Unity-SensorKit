@@ -1,31 +1,33 @@
 ﻿﻿using UnityEngine;
 
-/// <summary>
-/// Sensor which casts box<br/>
-/// Behaves like a Physics.BoxCast, Physics.BoxCastNonAlloc, depending on your settings
-/// </summary>
-public class BoxCastSensor : CastSensor
+namespace ThreeDISevenZeroR.SensorKit
 {
     /// <summary>
-    /// Half extents of box
+    /// Sensor which casts box<br/>
+    /// Behaves like a Physics.BoxCast, Physics.BoxCastNonAlloc, depending on your settings
     /// </summary>
-    public Vector3 halfExtents;
-
-    protected override int DoCast(Ray ray, RaycastHit[] hitArray)
+    public class BoxCastSensor : CastSensor
     {
-        var scale = transform.lossyScale;
+        /// <summary>
+        /// Half extents of box
+        /// </summary>
+        public Vector3 halfExtents;
 
-        if (maxResults == 1)
+        protected override int DoCast(Ray ray, RaycastHit[] hitArray)
         {
-            return Physics.BoxCast(ray.origin, PhysicsSensorUtils.GetScaledBoxRadius(halfExtents, scale), ray.direction,
-                out hitArray[0], transform.rotation, PhysicsSensorUtils.GetCastDistance(maxDistance, scale),
-                layerMask, queryTriggerInteraction) ? 1 : 0;
-        }
+            var scale = transform.lossyScale;
+
+            if (maxResults == 1)
+            {
+                return Physics.BoxCast(ray.origin, PhysicsSensorUtils.GetScaledBoxRadius(halfExtents, scale), ray.direction,
+                    out hitArray[0], transform.rotation, PhysicsSensorUtils.GetCastDistance(maxDistance, scale),
+                    layerMask, queryTriggerInteraction) ? 1 : 0;
+            }
         
-        return Physics.BoxCastNonAlloc(ray.origin, PhysicsSensorUtils.GetScaledBoxRadius(halfExtents, scale), 
-            ray.direction, hitArray, transform.rotation, PhysicsSensorUtils.GetCastDistance(maxDistance, scale), 
-            layerMask, queryTriggerInteraction);
-    }
+            return Physics.BoxCastNonAlloc(ray.origin, PhysicsSensorUtils.GetScaledBoxRadius(halfExtents, scale), 
+                ray.direction, hitArray, transform.rotation, PhysicsSensorUtils.GetCastDistance(maxDistance, scale), 
+                layerMask, queryTriggerInteraction);
+        }
 
 #if UNITY_EDITOR
     protected override void DrawColliderShape(Vector3 position, Quaternion rotation, Vector3 scale)
@@ -33,4 +35,6 @@ public class BoxCastSensor : CastSensor
         PhysicsSensorUtils.DrawBoxGizmo(position, rotation, scale, halfExtents);
     }
 #endif
+    }
 }
+

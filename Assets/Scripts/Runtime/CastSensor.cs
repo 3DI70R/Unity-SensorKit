@@ -1,184 +1,190 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// Abstract class for any cast sensor<br/>
-/// Cast sensor can detect objects at specified distance
-/// </summary>
-public abstract class CastSensor : PhysicsSensor
+namespace ThreeDISevenZeroR.SensorKit
 {
-    private static readonly RaycastHit[] emptyRays = new RaycastHit[0];
-    
     /// <summary>
-    /// Maximum ray cast distance
+    /// Abstract class for any cast sensor<br/>
+    /// Cast sensor can detect objects at specified distance
     /// </summary>
-    public float maxDistance = Mathf.Infinity;
-    
-    private static RaycastHit[] rayHits = emptyRays;
-    private bool outdatedColliders;
-
-    /// <summary>
-    /// Actual ray that will be fired on update
-    /// </summary>
-    public Ray Ray
+    public abstract class CastSensor : PhysicsSensor
     {
-        get { return new Ray(transform.position, transform.rotation *
-                             new Vector3(0, 0, transform.lossyScale.z > 0 ? 1 : -1)); }
-    }
+        private static readonly RaycastHit[] emptyRays = new RaycastHit[0];
 
-    /// <summary>
-    /// Array with all hits that have been detected during sensor update<br/>
-    /// This array is cached, and guaranteed to be at least HitCount long
-    /// </summary>
-    public RaycastHit[] RayHits
-    {
-        get { return rayHits; }
-    }
+        /// <summary>
+        /// Maximum ray cast distance
+        /// </summary>
+        public float maxDistance = Mathf.Infinity;
 
-    /// <summary>
-    /// Returns first RayHit<br/>
-    /// Convenience method, when maxCount is 1
-    /// </summary>
-    public RaycastHit RayHit
-    {
-        get { return HitCount > 0 ? RayHits[0] : default(RaycastHit); }
-    }
+        private static RaycastHit[] rayHits = emptyRays;
+        private bool outdatedColliders;
 
-    /// <summary>
-    /// Returns closest RayHit<br/>
-    /// Since NonAlloc methods returns array with no order, it 
-    /// </summary>
-    public RaycastHit ClosestRayHit
-    {
-        get
+        /// <summary>
+        /// Actual ray that will be fired on update
+        /// </summary>
+        public Ray Ray
         {
-            if (hitCount == 1)
+            get
             {
-                return rayHits[0];
+                return new Ray(transform.position, transform.rotation *
+                                                   new Vector3(0, 0, transform.lossyScale.z > 0 ? 1 : -1));
             }
-            
-            if (hitCount == 0)
-            {
-                return default(RaycastHit);
-            }
-            
-            var closestIndex = 0;
-            var closestDistance = float.MaxValue;
+        }
 
-            for (var i = 0; i < hitCount; i++)
+        /// <summary>
+        /// Array with all hits that have been detected during sensor update<br/>
+        /// This array is cached, and guaranteed to be at least HitCount long
+        /// </summary>
+        public RaycastHit[] RayHits
+        {
+            get { return rayHits; }
+        }
+
+        /// <summary>
+        /// Returns first RayHit<br/>
+        /// Convenience method, when maxCount is 1
+        /// </summary>
+        public RaycastHit RayHit
+        {
+            get { return HitCount > 0 ? RayHits[0] : default(RaycastHit); }
+        }
+
+        /// <summary>
+        /// Returns closest RayHit<br/>
+        /// Since NonAlloc methods returns array with no order, it 
+        /// </summary>
+        public RaycastHit ClosestRayHit
+        {
+            get
             {
-                var distance = rayHits[i].distance;
-                
-                if (distance < closestDistance)
+                if (hitCount == 1)
                 {
-                    closestIndex = i;
-                    closestDistance = distance;
+                    return rayHits[0];
                 }
+
+                if (hitCount == 0)
+                {
+                    return default(RaycastHit);
+                }
+
+                var closestIndex = 0;
+                var closestDistance = float.MaxValue;
+
+                for (var i = 0; i < hitCount; i++)
+                {
+                    var distance = rayHits[i].distance;
+
+                    if (distance < closestDistance)
+                    {
+                        closestIndex = i;
+                        closestDistance = distance;
+                    }
+                }
+
+                return rayHits[closestIndex];
             }
-
-            return rayHits[closestIndex];
         }
-    }
 
-    public override Collider[] HitColliders
-    {
-        get
+        public override Collider[] HitColliders
         {
-            if (outdatedColliders)
+            get
             {
-                UpdateCollidersArray();
-                outdatedColliders = false;
+                if (outdatedColliders)
+                {
+                    UpdateCollidersArray();
+                    outdatedColliders = false;
+                }
+
+                return hitColliders;
             }
-            
-            return hitColliders;
         }
-    }
 
-    public float CastDistance
-    {
-        get { return PhysicsSensorUtils.GetCastDistance(maxDistance, transform.lossyScale); }
-    }
+        public float CastDistance
+        {
+            get { return PhysicsSensorUtils.GetCastDistance(maxDistance, transform.lossyScale); }
+        }
 
-    private void Start()
-    {
-        if (!lazyAllocation)
+        private void Start()
+        {
+            if (!lazyAllocation)
+            {
+                EnsureArrayCapacity(ref hitColliders);
+                EnsureArrayCapacity(ref rayHits);
+            }
+        }
+
+        public override int UpdateSensor()
         {
             EnsureArrayCapacity(ref hitColliders);
             EnsureArrayCapacity(ref rayHits);
+            hitCount = DoCast(Ray, rayHits);
+            outdatedColliders = true;
+            return hitCount;
         }
-    }
 
-    public override int UpdateSensor()
-    {
-        EnsureArrayCapacity(ref hitColliders);
-        EnsureArrayCapacity(ref rayHits);
-        hitCount = DoCast(Ray, rayHits);
-        outdatedColliders = true;
-        return hitCount;
-    }
-
-    private void UpdateCollidersArray()
-    {
-        for (var i = 0; i < hitCount; i++)
+        private void UpdateCollidersArray()
         {
-            hitColliders[i] = rayHits[i].collider;
+            for (var i = 0; i < hitCount; i++)
+            {
+                hitColliders[i] = rayHits[i].collider;
+            }
+
+            for (var i = hitCount; i < hitColliders.Length; i++)
+            {
+                hitColliders[i] = null;
+            }
         }
 
-        for (var i = hitCount; i < hitColliders.Length; i++)
-        {
-            hitColliders[i] = null;
-        }
-    }
- 
-    protected abstract int DoCast(Ray ray, RaycastHit[] hit);
+        protected abstract int DoCast(Ray ray, RaycastHit[] hit);
 
 #if UNITY_EDITOR
 
-    private RaycastHit[] gizmoRayHits = emptyRays;
-    
-    private void OnDrawGizmosSelected()
-    {
-        var castDistance = CastDistance;
+        private RaycastHit[] gizmoRayHits = emptyRays;
 
-        if (float.IsPositiveInfinity(castDistance))
+        private void OnDrawGizmosSelected()
         {
-            castDistance = 1000000f;
-        }
+            var castDistance = CastDistance;
 
-        var castRay = Ray;
-        EnsureArrayCapacity(ref gizmoRayHits);
-        var gizmoHitCount = DoCast(castRay, gizmoRayHits);
-        var rayEnd = castRay.GetPoint(castDistance);
- 
-        if (gizmoHitCount > 0)
-        {
-            for(var i = 0; i < gizmoHitCount; i++)
+            if (float.IsPositiveInfinity(castDistance))
             {
-                var gizmoHit = gizmoRayHits[i];
-                var collisionPoint = castRay.GetPoint(gizmoHit.distance);
+                castDistance = 1000000f;
+            }
 
-                Gizmos.color = PhysicsSensorUtils.hasHitColor;
-                Gizmos.DrawLine(castRay.origin, collisionPoint);
-                DrawColliderShape(collisionPoint, transform.rotation, transform.lossyScale);
-                Gizmos.color = PhysicsSensorUtils.rayEndColor;
-                Gizmos.DrawLine(collisionPoint, rayEnd);
-                
-                PhysicsSensorUtils.DrawNormal(gizmoHit);
-                PhysicsSensorUtils.DrawCollisionPoints(collisionPoint, gizmoHit);
-                PhysicsSensorUtils.HighlightMeshVertices(gizmoHit);
-                PhysicsSensorUtils.DrawHitInfo(gizmoHit);
+            var castRay = Ray;
+            EnsureArrayCapacity(ref gizmoRayHits);
+            var gizmoHitCount = DoCast(castRay, gizmoRayHits);
+            var rayEnd = castRay.GetPoint(castDistance);
+
+            if (gizmoHitCount > 0)
+            {
+                for (var i = 0; i < gizmoHitCount; i++)
+                {
+                    var gizmoHit = gizmoRayHits[i];
+                    var collisionPoint = castRay.GetPoint(gizmoHit.distance);
+
+                    Gizmos.color = PhysicsSensorUtils.hasHitColor;
+                    Gizmos.DrawLine(castRay.origin, collisionPoint);
+                    DrawColliderShape(collisionPoint, transform.rotation, transform.lossyScale);
+                    Gizmos.color = PhysicsSensorUtils.rayEndColor;
+                    Gizmos.DrawLine(collisionPoint, rayEnd);
+
+                    PhysicsSensorUtils.DrawNormal(gizmoHit);
+                    PhysicsSensorUtils.DrawCollisionPoints(collisionPoint, gizmoHit);
+                    PhysicsSensorUtils.HighlightMeshVertices(gizmoHit);
+                    PhysicsSensorUtils.DrawHitInfo(gizmoHit);
+                }
+            }
+            else
+            {
+                Gizmos.color = PhysicsSensorUtils.noHitColor;
+                Gizmos.DrawLine(castRay.origin, rayEnd);
+                DrawColliderShape(rayEnd, transform.rotation, transform.lossyScale);
             }
         }
-        else
-        {
-            Gizmos.color = PhysicsSensorUtils.noHitColor;
-            Gizmos.DrawLine(castRay.origin, rayEnd);
-            DrawColliderShape(rayEnd, transform.rotation, transform.lossyScale);
-        }
-    }
 
-    protected virtual void DrawColliderShape(Vector3 position, Quaternion rotation, Vector3 scale)
-    {
-        // noop
-    }
+        protected virtual void DrawColliderShape(Vector3 position, Quaternion rotation, Vector3 scale)
+        {
+            // noop
+        }
 #endif
+    }
 }
