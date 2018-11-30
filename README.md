@@ -53,7 +53,7 @@ Nearly all of sensor parameters are actually Cast/Overlap method parameters, so 
 - **Lazy Allocation** - If there is chance that your sensor will be unused, you may tick this checkbox, to delay array allocation untill first use. This option may save you few nanoseconds, if you are desperate for performance.
 
 # Gizmo
-Each sensor has detailed gizmo, to aid sensor configuration and allow quick wisualization of current sensor behavior
+Each sensor has detailed gizmo, to aid sensor configuration and allow quick visualization of current sensor behavior
 
 _Gizmo is visible only on selected game objects for peformance reasons_
 ![Gizmo](Images/Gizmo.png)
