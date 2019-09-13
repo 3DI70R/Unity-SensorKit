@@ -86,13 +86,6 @@ Sensor **is not updated automatically**, you need to call `UpdateSensor()` for t
 At least Unity **2018.1** or higher. **2019.1** is required for overriding PhysicsScene
 
 # Installation
-If your Unity/PackageManager supports git dependencies, just add this entry into **Packages\manifest.json**
-```
-"ru.threedisevenzeror.sensorkit": "https://github.com/3DI70R/SensorKit.git"
-```
-And all these scripts will be included in your project as dependency.
-
-
 
 * **Git**: 
     If git is installed, you can add following entry in **Packages\manifest.json**
