@@ -11,8 +11,12 @@ namespace ThreeDISevenZeroR.SensorKit
 
         protected override int DoOverlapCheck(Vector3 center, Collider[] colliders)
         {
-            return Physics.OverlapBoxNonAlloc(center,
-                PhysicsSensorUtils.GetScaledBoxRadius(halfExtents, transform.lossyScale),
+#if UNITY_2019_1_OR_NEWER
+            return PhysicsScene.OverlapBox
+#else
+            return Physics.OverlapBoxNonAlloc
+#endif
+            (center, PhysicsSensorUtils.GetScaledBoxRadius(halfExtents, transform.lossyScale),
                 colliders, transform.rotation, layerMask, queryTriggerInteraction);
         }
 

@@ -51,6 +51,8 @@ public class CharacterObject : MonoBehaviour
 Nearly all of sensor parameters are actually Cast/Overlap method parameters, so i think if you need documentation for those, you can easily read detailed info in Unity Documentation. However, there is unique parameters:
 - **Max Results** - Since sensor can detect multiple objects at once, it needs to preallocate array for specific object count, to avoid garbage generation for each cast.
 - **Lazy Allocation** - If there is chance that your sensor will be unused, you may tick this checkbox, to delay array allocation untill first use. This option may save you few nanoseconds, if you are desperate for performance.
+- **Ray Direction Override** - For Cast* sensors, ability to separate ray cast direction from sensor rotation. (**2019.1+**)
+
 
 # Gizmo
 Each sensor has detailed gizmo, to aid sensor configuration and allow quick visualization of current sensor behavior
@@ -80,6 +82,9 @@ Sensor **is not updated automatically**, you need to call `UpdateSensor()` for t
 - There is no guarantee that sensor will be used every frame
 - Often you want to keep last cast information untill next update
 
+# Requirements
+At least Unity **2018.1** or higher. **2019.1** is required for overriding PhysicsScene
+
 # Installation
 If your Unity/PackageManager supports git dependencies, just add this entry into **Packages\manifest.json**
 ```
@@ -87,4 +92,23 @@ If your Unity/PackageManager supports git dependencies, just add this entry into
 ```
 And all these scripts will be included in your project as dependency.
 
+
+
+* **Git**: 
+    If git is installed, you can add following entry in **Packages\manifest.json**
+    ```
+    "ru.threedisevenzeror.sensorkit": "https://github.com/3DI70R/SensorKit.git"
+    ```
+    And all these scripts will be included in your project as dependency.
+* **Local Package:**
+    Just download this repository as ZIP, extract, and then add it via "Add package from disk..." from Package Manager
+
 Otherwise, you can just copy files from `Assets/Scripts/Runtime` to your project.
+
+# Changelog
+* 1.0.0
+    - Initial release
+* 1.1.0
+    - Ability to override PhysicsScene used by sensors (only for Unity 2019.1+)
+    - Ability to override ray cast direction to allow non ray aligned shapes
+    - Small bugfix, RayCast/SphereCast/CapsuleCast didn't used provided precalculated Ray instance and calculated its own version (which is identical, so it is just small performance fix)

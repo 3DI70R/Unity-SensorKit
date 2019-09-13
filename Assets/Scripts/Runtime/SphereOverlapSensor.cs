@@ -28,11 +28,22 @@ namespace ThreeDISevenZeroR.SensorKit
                 Vector3 p2;
 
                 PhysicsSensorUtils.GetCapsulePoints(center, transform.rotation, width, scale.x, out p1, out p2);
-                return Physics.OverlapCapsuleNonAlloc(p1, p2, PhysicsSensorUtils.GetScaledCapsuleRadius(radius, scale),
+
+#if UNITY_2019_1_OR_NEWER
+                return PhysicsScene.OverlapCapsule
+#else
+                return Physics.OverlapCapsuleNonAlloc
+#endif
+                (p1, p2, PhysicsSensorUtils.GetScaledCapsuleRadius(radius, scale),
                     colliders, layerMask, queryTriggerInteraction);
             }
 
-            return Physics.OverlapSphereNonAlloc(center, PhysicsSensorUtils.GetScaledSphereRadius(radius, scale),
+#if UNITY_2019_1_OR_NEWER
+            return PhysicsScene.OverlapSphere
+#else
+            return Physics.OverlapSphereNonAlloc
+#endif
+            (center, PhysicsSensorUtils.GetScaledSphereRadius(radius, scale), 
                 colliders, layerMask, queryTriggerInteraction);
         }
 

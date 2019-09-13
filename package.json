@@ -1,9 +1,13 @@
 {
     "name": "ru.threedisevenzeror.sensorkit",
     "displayName": "Sensor Kit",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "unity": "2018.1",
-    "description": "Collection of wrapped Physics.* methods with ability to place casts in scene and configure parameters without hardcoding values in code",
+    "description": "Collection of wrapped Physics.* methods with ability to place casts in scene and configure parameters without hardcoding values",
     "keywords": ["Physics", "Raycast", "Utility"],
-    "category": "Physics"
+    "category": "Physics",
+    "author" : {
+        "name": "3DI70R",
+        "email": "ThreeDISevenZeroR@gmail.com"
+    }
 }

@@ -33,13 +33,22 @@ namespace ThreeDISevenZeroR.SensorKit
 
                 if (hitArray.Length == 1)
                 {
-                    return Physics.CapsuleCast(p1, p2, PhysicsSensorUtils.GetScaledCapsuleRadius(radius, scale),
-                        ray.direction, out hitArray[0], castDistance, layerMask, queryTriggerInteraction)
-                        ? 1
-                        : 0;
+
+#if UNITY_2019_1_OR_NEWER
+                    return PhysicsScene.
+#else
+                    return Physics.
+#endif
+                        CapsuleCast(p1, p2, PhysicsSensorUtils.GetScaledCapsuleRadius(radius, scale), 
+                            ray.direction, out hitArray[0], castDistance, layerMask, queryTriggerInteraction) ? 1 : 0;
                 }
 
-                return Physics.CapsuleCastNonAlloc(p1, p2, PhysicsSensorUtils.GetScaledCapsuleRadius(radius, scale),
+#if UNITY_2019_1_OR_NEWER
+                return PhysicsScene.CapsuleCast
+#else
+                return Physics.CapsuleCastNonAlloc
+#endif
+                (p1, p2, PhysicsSensorUtils.GetScaledCapsuleRadius(radius, scale), 
                     ray.direction, hitArray, castDistance, layerMask, queryTriggerInteraction);
             }
 
@@ -47,22 +56,41 @@ namespace ThreeDISevenZeroR.SensorKit
             {
                 if (hitArray.Length == 1)
                 {
-                    return Physics.SphereCast(Ray, PhysicsSensorUtils.GetScaledSphereRadius(radius, scale),
-                        out hitArray[0], castDistance, layerMask, queryTriggerInteraction)
-                        ? 1
-                        : 0;
+#if UNITY_2019_1_OR_NEWER
+                    return PhysicsScene.SphereCast
+#else
+                    return Physics.SphereCast
+#endif
+                    (ray.origin, PhysicsSensorUtils.GetScaledSphereRadius(radius, scale), 
+                        ray.direction, out hitArray[0], castDistance, layerMask, queryTriggerInteraction) ? 1 : 0;
                 }
-
-                return Physics.SphereCastNonAlloc(Ray, PhysicsSensorUtils.GetScaledSphereRadius(radius, scale),
-                    hitArray, castDistance, layerMask, queryTriggerInteraction);
+                
+#if UNITY_2019_1_OR_NEWER
+                return PhysicsScene.SphereCast
+#else
+                return Physics.SphereCastNonAlloc
+#endif
+                (ray.origin, PhysicsSensorUtils.GetScaledSphereRadius(radius, scale),
+                    ray.direction, hitArray, castDistance, layerMask, queryTriggerInteraction);
             }
 
             if (hitArray.Length == 1)
             {
-                return Physics.Raycast(Ray, out hitArray[0], castDistance, layerMask, queryTriggerInteraction) ? 1 : 0;
+#if UNITY_2019_1_OR_NEWER
+                return PhysicsScene.
+#else
+                return Physics.
+#endif
+                    Raycast(ray.origin, ray.direction, out hitArray[0], 
+                        castDistance, layerMask, queryTriggerInteraction) ? 1 : 0;
             }
 
-            return Physics.RaycastNonAlloc(Ray, hitArray,
+#if UNITY_2019_1_OR_NEWER
+            return PhysicsScene.Raycast
+#else
+            return Physics.RaycastNonAlloc
+#endif
+            (ray.origin, ray.direction, hitArray,
                 castDistance, layerMask, queryTriggerInteraction);
         }
 

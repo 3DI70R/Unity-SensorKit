@@ -1,5 +1,5 @@
 ﻿﻿using UnityEngine;
-
+ 
 namespace ThreeDISevenZeroR.SensorKit
 {
     /// <summary>
@@ -19,12 +19,22 @@ namespace ThreeDISevenZeroR.SensorKit
 
             if (maxResults == 1)
             {
-                return Physics.BoxCast(ray.origin, PhysicsSensorUtils.GetScaledBoxRadius(halfExtents, scale), ray.direction,
+#if UNITY_2019_1_OR_NEWER
+                return PhysicsScene.
+#else
+                return Physics.
+#endif
+                BoxCast(ray.origin, PhysicsSensorUtils.GetScaledBoxRadius(halfExtents, scale), ray.direction,
                     out hitArray[0], transform.rotation, PhysicsSensorUtils.GetCastDistance(maxDistance, scale),
                     layerMask, queryTriggerInteraction) ? 1 : 0;
             }
-        
-            return Physics.BoxCastNonAlloc(ray.origin, PhysicsSensorUtils.GetScaledBoxRadius(halfExtents, scale), 
+            
+#if UNITY_2019_1_OR_NEWER
+            return PhysicsScene.BoxCast
+#else
+            return Physics.BoxCastNonAlloc
+#endif
+            (ray.origin, PhysicsSensorUtils.GetScaledBoxRadius(halfExtents, scale), 
                 ray.direction, hitArray, transform.rotation, PhysicsSensorUtils.GetCastDistance(maxDistance, scale), 
                 layerMask, queryTriggerInteraction);
         }

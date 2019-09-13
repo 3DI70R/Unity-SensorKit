@@ -11,6 +11,14 @@ namespace ThreeDISevenZeroR.SensorKit
         private static readonly RaycastHit[] emptyRays = new RaycastHit[0];
 
         /// <summary>
+        /// Transform which overrides ray cast direction
+        /// Makes possible to cast rotated shapes
+        ///
+        /// If null, uses sensor object for direction
+        /// </summary>
+        public Transform rayDirectionOverride;
+        
+        /// <summary>
         /// Maximum ray cast distance
         /// </summary>
         public float maxDistance = Mathf.Infinity;
@@ -25,7 +33,7 @@ namespace ThreeDISevenZeroR.SensorKit
         {
             get
             {
-                return new Ray(transform.position, transform.rotation *
+                return new Ray(transform.position, CastDirection *
                                                    new Vector3(0, 0, transform.lossyScale.z > 0 ? 1 : -1));
             }
         }
@@ -84,6 +92,23 @@ namespace ThreeDISevenZeroR.SensorKit
             }
         }
 
+        /// <summary>
+        /// Direction in which ray will be casted
+        /// Either rotation used by this object, or rotation from rayDirectionOverride
+        /// </summary>
+        public Quaternion CastDirection
+        {
+            get { return rayDirectionOverride ? rayDirectionOverride.rotation : transform.rotation; }
+        }
+        
+        /// <summary>
+        /// Actual distance of cast, with respect of object scale
+        /// </summary>
+        public float CastDistance
+        {
+            get { return PhysicsSensorUtils.GetCastDistance(maxDistance, transform.lossyScale); }
+        }
+        
         public override Collider[] HitColliders
         {
             get
@@ -96,11 +121,6 @@ namespace ThreeDISevenZeroR.SensorKit
 
                 return hitColliders;
             }
-        }
-
-        public float CastDistance
-        {
-            get { return PhysicsSensorUtils.GetCastDistance(maxDistance, transform.lossyScale); }
         }
 
         private void Start()

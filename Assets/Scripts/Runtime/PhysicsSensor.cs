@@ -38,6 +38,30 @@ namespace ThreeDISevenZeroR.SensorKit
         protected int hitCount;
         protected Collider[] hitColliders = emptyColliders;
 
+#if UNITY_2019_1_OR_NEWER
+
+        private bool isCustomPhysicsSceneSet;
+        private PhysicsScene customPhysicsScene;
+
+        /// <summary>
+        /// Physics scene used for physics checks
+        /// Defaults to "Physics.defaultPhysicsScene"
+        ///
+        /// When set to different scene, it is user responsibility to correctly
+        /// handle cases when PhysicsScene is destroyed, sensor will not switch to "Physics.defaultPhysicsScene"
+        /// automatically
+        /// </summary>
+        public PhysicsScene PhysicsScene
+        {
+            get { return isCustomPhysicsSceneSet ? customPhysicsScene : Physics.defaultPhysicsScene; }
+            set
+            {
+                customPhysicsScene = value;
+                isCustomPhysicsSceneSet = true;
+            }
+        }
+#endif
+
         /// <summary>
         /// Is sensor detected something?
         /// Returns true when HitCount returns more than zero
