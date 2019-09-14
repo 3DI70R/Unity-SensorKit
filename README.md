@@ -51,7 +51,7 @@ public class CharacterObject : MonoBehaviour
 Nearly all of sensor parameters are actually Cast/Overlap method parameters, so i think if you need documentation for those, you can easily read detailed info in Unity Documentation. However, there is unique parameters:
 - **Max Results** - Since sensor can detect multiple objects at once, it needs to preallocate array for specific object count, to avoid garbage generation for each cast.
 - **Lazy Allocation** - If there is chance that your sensor will be unused, you may tick this checkbox, to delay array allocation untill first use. This option may save you few nanoseconds, if you are desperate for performance.
-- **Ray Direction Override** - For Cast* sensors, ability to separate ray cast direction from sensor rotation. (**2019.1+**)
+- **Ray Direction Override** - For Cast* sensors, ability to separate ray cast direction from sensor rotation.
 
 
 # Gizmo
