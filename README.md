@@ -93,7 +93,7 @@ At least Unity **2018.1** or higher. **2019.1** is required for overriding Physi
     "ru.threedisevenzeror.sensorkit": "https://github.com/3DI70R/SensorKit.git"
     ```
     And all these scripts will be included in your project as dependency.
-* **Local Package (2018.3):**
+* **Local Package (2018.3+):**
     Just download this repository as ZIP, extract, and then add it via "Add package from disk..." from Package Manager
 
 Otherwise, you can just copy files from `Assets/Scripts/Runtime` to your project.
