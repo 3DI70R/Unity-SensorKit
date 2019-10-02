@@ -112,11 +112,14 @@ namespace ThreeDISevenZeroR.SensorKit
         public static void DrawHitInfo(RaycastHit hit)
         {
             if (hit.collider == null)
-            {
                 return;
-            }
 
-            var sceneCamera = SceneView.currentDrawingSceneView.camera;
+            var sceneView = SceneView.currentDrawingSceneView;
+            var sceneCamera = sceneView != null ? SceneView.currentDrawingSceneView.camera : Camera.current;
+            
+            if (sceneCamera == null)
+                return;
+            
             var offset = sceneCamera.WorldToScreenPoint(hit.point);
 
             if (offset.z > 0)
