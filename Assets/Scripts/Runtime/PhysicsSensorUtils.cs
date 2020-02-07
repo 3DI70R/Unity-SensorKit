@@ -127,10 +127,19 @@ namespace ThreeDISevenZeroR.SensorKit
                 Handles.BeginGUI();
                 offset.x = offset.x - 64;
                 offset.y = -offset.y + sceneCamera.pixelHeight + 16;
+
+#if UNITY_2019_3 // New GUI
+                var textHeight = 22;
+                var textOffset = 6;
+#else 
+                var textHeight = 16;
+                var textOffset = 8;
+#endif
+                
                 GUI.Box(new Rect(offset.x, offset.y, 140, 56), GUIContent.none);
-                GUI.Label(new Rect(offset.x + 8, offset.y + 8, 132, 16), hit.collider.gameObject.name);
-                GUI.Label(new Rect(offset.x + 8, offset.y + 20, 132, 16), "distance: " + hit.distance);
-                GUI.Label(new Rect(offset.x + 8, offset.y + 32, 132, 16), "triangleIndex: " + hit.triangleIndex);
+                GUI.Label(new Rect(offset.x + 8, offset.y + textOffset, 132, textHeight), hit.collider.gameObject.name);
+                GUI.Label(new Rect(offset.x + 8, offset.y + textOffset + 12, 132, textHeight), "distance: " + hit.distance);
+                GUI.Label(new Rect(offset.x + 8, offset.y + textOffset + 24, 132, textHeight), "triangleIndex: " + hit.triangleIndex);
                 Handles.EndGUI();
             }
         }

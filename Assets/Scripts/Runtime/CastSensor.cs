@@ -23,7 +23,7 @@ namespace ThreeDISevenZeroR.SensorKit
         /// </summary>
         public float maxDistance = Mathf.Infinity;
 
-        private static RaycastHit[] rayHits = emptyRays;
+        private RaycastHit[] rayHits = emptyRays;
         private bool outdatedColliders;
 
         /// <summary>
