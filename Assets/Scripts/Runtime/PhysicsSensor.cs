@@ -1,38 +1,50 @@
 ﻿using UnityEngine;
+using UnityEngine.Animations;
 
 namespace ThreeDISevenZeroR.SensorKit
 {
     /// <summary>
-    /// Base class for any physics sensor
-    /// Provides shared collider detection logic that can be obtainer from any sensor
+    /// <para>Base class for any physics sensor</para>
+    /// <para>Provides shared collider detection logic that can be obtained from any sensor</para>
     /// </summary>
     public abstract class PhysicsSensor : MonoBehaviour
     {
         private static readonly Collider[] emptyColliders = new Collider[0];
 
         /// <summary>
-        /// If false, all arrays will be allocated on object creation. If true, all arrays will be allocated
-        /// on first access to them. Saves memory on sensors that can be unused during object lifetime.
-        /// Slightly saves memory, but makes allocation on first access to sensor
+        /// <para>If false, all arrays will be allocated on object creation.</para>
+        /// <para>If true, all arrays will be allocated on first access.</para>
         /// </summary>
-        public bool lazyAllocation;
+#if UNITY_2019_2_OR_NEWER
+        [NotKeyable]
+#endif
+        [SerializeField]
+        [Tooltip("If false, all arrays will be allocated on object creation.\n" +
+                 "If true, all arrays will be allocated on first access.")]
+        protected bool lazyAllocation;
 
         /// <summary>
-        /// Maximum amount of detected hits
-        /// Every sensor uses no allocation per cast, and it is important to know maximum amount of
-        /// objects this sensor is able to detect, to preallocate array at creation
-        /// Changing this property at runtime recreates array, so try to not touch it without much need
+        /// <para>Maximum amount of detected hits</para>
+        /// <para>Every sensor uses no allocation per cast, and it is important to know maximum amount of
+        /// objects this sensor is able to detect, to preallocate array
+        /// Changing this property at runtime recreates array, so try to not touch if not necessary</para>
         /// </summary>
+        [Tooltip("Maximum amount of detected hits\n" +
+                 "Every sensor uses no allocation per cast, and it is important to know maximum amount of objects " +
+                 "this sensor is able to detect, to preallocate array. " +
+                 "Changing this property at runtime recreates array, so try to not touch if not necessary")]
         public int maxResults = 1;
 
         /// <summary>
-        /// Layer mask of cast
+        /// <para>Layer mask which sensor will use<para>
         /// </summary>
+        [Tooltip("Layer mask which sensor will use")]
         public LayerMask layerMask = Physics.DefaultRaycastLayers;
 
         /// <summary>
-        /// Setting that specifies, if sensor should detect triggers too
+        /// <para>Should this sensor detect triggers</para>
         /// </summary>
+        [Tooltip("Should this sensor detect triggers")]
         public QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal;
 
         protected int hitCount;
@@ -42,14 +54,22 @@ namespace ThreeDISevenZeroR.SensorKit
 
         private bool isCustomPhysicsSceneSet;
         private PhysicsScene customPhysicsScene;
+        
+        /// <summary>
+        /// <para>Is lazy allocation enabled in inspector</para>
+        /// </summary>
+        public bool UsesLazyAllocation
+        {
+            get { return lazyAllocation; }
+        }
 
         /// <summary>
-        /// Physics scene used for physics checks
-        /// Defaults to "Physics.defaultPhysicsScene"
+        /// <para>Physics scene used for physics checks
+        /// Defaults to "Physics.defaultPhysicsScene"</para>
         ///
-        /// When set to different scene, it is user responsibility to correctly
+        /// <para>When set to different scene, it is user responsibility to correctly
         /// handle cases when PhysicsScene is destroyed, sensor will not switch to "Physics.defaultPhysicsScene"
-        /// automatically
+        /// automatically</para>
         /// </summary>
         public PhysicsScene PhysicsScene
         {
@@ -85,7 +105,11 @@ namespace ThreeDISevenZeroR.SensorKit
         /// </summary>
         public virtual Collider[] HitColliders
         {
-            get { return hitColliders; }
+            get
+            {
+                EnsureArrayCapacity(ref hitColliders);
+                return hitColliders;
+            }
         }
 
         /// <summary>
@@ -93,7 +117,10 @@ namespace ThreeDISevenZeroR.SensorKit
         /// </summary>
         public Collider HitCollider
         {
-            get { return HitCount > 0 ? HitColliders[0] : null; }
+            get
+            {
+                return HitCount > 0 ? HitColliders[0] : null;
+            }
         }
 
         /// <summary>
@@ -103,8 +130,8 @@ namespace ThreeDISevenZeroR.SensorKit
         public abstract int UpdateSensor();
 
         /// <summary>
-        /// Ensures that specified array contains enough items to store at least maxResults count
-        /// Recreates array if not
+        /// <para>Ensures that specified array contains enough items to store at least maxResults count</para>
+        /// <para>If static allocation is not used, </para>
         /// </summary>
         protected void EnsureArrayCapacity<T>(ref T[] array)
         {

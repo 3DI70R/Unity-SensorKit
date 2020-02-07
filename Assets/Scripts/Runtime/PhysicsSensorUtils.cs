@@ -58,6 +58,7 @@ namespace ThreeDISevenZeroR.SensorKit
         private static readonly List<Vector3> sharedVertices = new List<Vector3>(8192);
         private static readonly List<int> sharedIndices = new List<int>(8192);
         private static readonly List<int> sharedIndicesTemp = new List<int>(8192);
+        private static Mesh lastInspectedMesh;
 
         public static void DrawCollisionPoints(Vector3 collisionPoint, RaycastHit hit)
         {
@@ -84,13 +85,18 @@ namespace ThreeDISevenZeroR.SensorKit
             if (meshCollider != null)
             {
                 var mesh = meshCollider.sharedMesh;
-                mesh.GetVertices(sharedVertices);
-                sharedIndices.Clear();
 
-                for (var i = 0; i < mesh.subMeshCount; i++)
+                if (mesh != lastInspectedMesh)
                 {
-                    mesh.GetTriangles(sharedIndicesTemp, i, true);
-                    sharedIndices.AddRange(sharedIndicesTemp);
+                    lastInspectedMesh = mesh;
+                    mesh.GetVertices(sharedVertices);
+                    sharedIndices.Clear();
+                    
+                    for (var i = 0; i < mesh.subMeshCount; i++)
+                    {
+                        mesh.GetTriangles(sharedIndicesTemp, i, true);
+                        sharedIndices.AddRange(sharedIndicesTemp);
+                    }
                 }
 
                 var triangleStart = hit.triangleIndex * 3;
@@ -125,10 +131,17 @@ namespace ThreeDISevenZeroR.SensorKit
             if (offset.z > 0)
             {
                 Handles.BeginGUI();
-                offset.x = offset.x - 64;
-                offset.y = -offset.y + sceneCamera.pixelHeight + 16;
+                var rect = new Rect(offset.x - 64,-offset.y + sceneCamera.pixelHeight + 16, 
+                    140, 56);
+                var boundsRect = Rect.MinMaxRect(8, 8, 
+                    sceneCamera.pixelWidth - 8, sceneCamera.pixelHeight - 8);
 
-#if UNITY_2019_3 // New GUI
+                if (rect.x < boundsRect.x) rect.x = boundsRect.x;
+                if (rect.y < boundsRect.y) rect.y = boundsRect.y;
+                if (rect.xMax > boundsRect.xMax) rect.x = boundsRect.xMax - rect.width;
+                if (rect.yMax > boundsRect.yMax) rect.y = boundsRect.yMax - rect.height;
+
+#if UNITY_2019_3_OR_NEWER // New GUI
                 var textHeight = 22;
                 var textOffset = 6;
 #else 
@@ -136,10 +149,16 @@ namespace ThreeDISevenZeroR.SensorKit
                 var textOffset = 8;
 #endif
                 
-                GUI.Box(new Rect(offset.x, offset.y, 140, 56), GUIContent.none);
-                GUI.Label(new Rect(offset.x + 8, offset.y + textOffset, 132, textHeight), hit.collider.gameObject.name);
-                GUI.Label(new Rect(offset.x + 8, offset.y + textOffset + 12, 132, textHeight), "distance: " + hit.distance);
-                GUI.Label(new Rect(offset.x + 8, offset.y + textOffset + 24, 132, textHeight), "triangleIndex: " + hit.triangleIndex);
+                GUI.color = Color.black * 0.6f;
+                GUI.Box(new Rect(rect.x, rect.y, rect.width, rect.height), 
+                    GUIContent.none, EditorStyles.textField);
+                GUI.color = Color.white;
+                GUI.Label(new Rect(rect.x + 8, rect.y + textOffset, 132, textHeight), 
+                    hit.collider.gameObject.name, EditorStyles.whiteLabel);
+                GUI.Label(new Rect(rect.x + 8, rect.y + textOffset + 12, 132, textHeight), 
+                    "distance: " + hit.distance, EditorStyles.whiteLabel);
+                GUI.Label(new Rect(rect.x + 8, rect.y + textOffset + 24, 132, textHeight), 
+                    "triangleIndex: " + hit.triangleIndex, EditorStyles.whiteLabel);
                 Handles.EndGUI();
             }
         }

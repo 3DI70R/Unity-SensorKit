@@ -3,14 +3,15 @@
 namespace ThreeDISevenZeroR.SensorKit
 {
     /// <summary>
-    /// Sensor which casts box<br/>
-    /// Behaves like a Physics.BoxCast, Physics.BoxCastNonAlloc, depending on your settings
+    /// <para>Sensor which casts box</para>
+    /// <para>Behaves like a Physics.BoxCast, Physics.BoxCastNonAlloc, depending on your settings</para>
     /// </summary>
     public class BoxCastSensor : CastSensor
     {
         /// <summary>
-        /// Half extents of box
+        /// <para>Half extents of box</para>
         /// </summary>
+        [Tooltip("Half extents of box")]
         public Vector3 halfExtents;
 
         protected override int DoCast(Ray ray, RaycastHit[] hitArray)

@@ -3,20 +3,22 @@
 namespace ThreeDISevenZeroR.SensorKit
 {
     /// <summary>
-    /// Sensor which casts ray, sphere or capsule.
-    /// Behaves like a Physics.Raycast, Physics.RaycastNonAlloc, Physics.SphereCast, Physics.SphereCastNonAlloc,
-    /// Physics.CapsuleCast, Physics.CapsuleCastNonAlloc, depending on your settings
+    /// <para>Sensor which casts ray, sphere or capsule.</para>
+    /// <para>Behaves like a Physics.Raycast, Physics.RaycastNonAlloc, Physics.SphereCast, Physics.SphereCastNonAlloc,
+    /// Physics.CapsuleCast, Physics.CapsuleCastNonAlloc, depending on your settings</para>
     /// </summary>
     public class SphereCastSensor : CastSensor
     {
         /// <summary>
-        /// Radius of sphere, when sphere radius is zero, behaves like a ray
+        /// <para>Radius of sphere, when sphere radius is zero, behaves like a ray</para>
         /// </summary>
+        [Tooltip("Radius of sphere, when sphere radius is zero, behaves like a ray")]
         public float radius;
 
         /// <summary>
-        /// With of sphere, when non zero, makes this sensor behave like a capsule, when zero, behaves like a sphere
+        /// <para>Width of sphere, when non zero, makes this sensor behave like a capsule, when zero, behaves like a sphere</para>
         /// </summary>
+        [Tooltip("Width of sphere, when non zero, makes this sensor behave like a capsule, when zero, behaves like a sphere")]
         public float width;
 
         protected override int DoCast(Ray ray, RaycastHit[] hitArray)

@@ -104,9 +104,14 @@ Otherwise, you can just copy files from `Assets/Scripts/Runtime` to your project
 * 1.1.0
     - Feature: Ability to override PhysicsScene used by sensors (only for Unity 2019.1+)
     - Feature: Ability to override ray cast direction to allow non ray aligned shapes
-    - Bugfix, RayCast/SphereCast/CapsuleCast didn't used provided precalculated Ray instance and calculated its own version (which is identical, so it is just small performance fix)
+    - Bugfix: RayCast/SphereCast/CapsuleCast didn't used provided precalculated Ray instance and calculated its own version (which is identical, so it is just small performance fix)
 * 1.1.1
     - Bugfix: null pointer exception while gizmos are enabled in game view
 * 1.1.2
     - Bugfix: CastSensor stored rayHits in **static** array. This is a big glaring bug that i didn't noticed. Sorry. (Basically, you lose cast information for previous sensors if you didn't used it right away)
     - Bugfix: Text was slightly clipped in 2019.3 due to UI update
+* 1.1.3
+    - Improvement: Documentation formatting fixes, Tooltips for editor
+    - Improvement: Hit information window style update, also now it doesn't clip out of view
+    - Improvement: Vertex caching for hit information overlay
+    - Improvement: "Lazy Allocation" now readonly, non keyable and can be set only from inspector, because it is used only during component initialization

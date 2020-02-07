@@ -3,8 +3,8 @@
 namespace ThreeDISevenZeroR.SensorKit
 {
     /// <summary>
-    /// Abstract class for any overlap sensor
-    /// Overlap sensor can detect objects at specified location
+    /// <para>Abstract class for any overlap sensor</para>
+    /// <para>Overlap sensor can detect objects at specified location</para>
     /// </summary>
     public abstract class OverlapSensor : PhysicsSensor
     {

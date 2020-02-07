@@ -3,62 +3,71 @@
 namespace ThreeDISevenZeroR.SensorKit
 {
     /// <summary>
-    /// Abstract class for any cast sensor<br/>
-    /// Cast sensor can detect objects at specified distance
+    /// <para>Abstract class for any cast sensor</para>
+    /// <para>Cast sensor can detect objects at specified distance</para>
     /// </summary>
     public abstract class CastSensor : PhysicsSensor
     {
-        private static readonly RaycastHit[] emptyRays = new RaycastHit[0];
+        private static readonly RaycastHit[] emptyRayHits = new RaycastHit[0];
 
         /// <summary>
-        /// Transform which overrides ray cast direction
-        /// Makes possible to cast rotated shapes
-        ///
-        /// If null, uses sensor object for direction
+        /// <para>Transform which overrides ray cast direction. Makes possible to cast rotated shapes</para>
+        /// <para>If null, uses sensor object for direction</para>
         /// </summary>
+        [Tooltip("Transform which overrides ray cast direction. Makes possible to cast rotated shapes\n" +
+                 "If null, uses sensor object for direction")]
         public Transform rayDirectionOverride;
         
         /// <summary>
-        /// Maximum ray cast distance
+        /// <para>Maximum cast distance</para>
         /// </summary>
+        [Tooltip("Maximum cast distance")]
         public float maxDistance = Mathf.Infinity;
 
-        private RaycastHit[] rayHits = emptyRays;
+        private RaycastHit[] rayHits = emptyRayHits;
         private bool outdatedColliders;
 
         /// <summary>
-        /// Actual ray that will be fired on update
+        /// <para>Actual ray that will be fired on update</para>
         /// </summary>
         public Ray Ray
         {
             get
             {
                 return new Ray(transform.position, CastDirection *
-                                                   new Vector3(0, 0, transform.lossyScale.z > 0 ? 1 : -1));
+                               new Vector3(0, 0, transform.lossyScale.z > 0 ? 1 : -1));
             }
         }
 
         /// <summary>
-        /// Array with all hits that have been detected during sensor update<br/>
-        /// This array is cached, and guaranteed to be at least HitCount long
+        /// <para>Array with all hits that have been detected during sensor update</para>
+        /// <para>This array is cached, and guaranteed to be at least HitCount long</para>
         /// </summary>
         public RaycastHit[] RayHits
         {
-            get { return rayHits; }
+            get
+            {
+                EnsureArrayCapacity(ref rayHits);
+                return rayHits;
+            }
         }
 
         /// <summary>
-        /// Returns first RayHit<br/>
-        /// Convenience method, when maxCount is 1
+        /// <para>Returns first RayHit</para>
+        /// <para>Convenience method when maxCount is 1</para>
         /// </summary>
         public RaycastHit RayHit
         {
-            get { return HitCount > 0 ? RayHits[0] : default(RaycastHit); }
+            get
+            {
+                return HitCount > 0 ? RayHits[0] : default(RaycastHit);
+            }
         }
 
         /// <summary>
-        /// Returns closest RayHit<br/>
-        /// Since NonAlloc methods returns array with no order, it 
+        /// <para>Returns closest RayHit</para>
+        /// <para>Since NonAlloc methods returns array with no order,
+        /// method finds most closest hit in result array</para>
         /// </summary>
         public RaycastHit ClosestRayHit
         {
@@ -93,8 +102,8 @@ namespace ThreeDISevenZeroR.SensorKit
         }
 
         /// <summary>
-        /// Direction in which ray will be casted
-        /// Either rotation used by this object, or rotation from rayDirectionOverride
+        /// <para>Direction in which ray will be casted</para>
+        /// <para>Either rotation used by this object, or rotation from rayDirectionOverride</para>
         /// </summary>
         public Quaternion CastDirection
         {
@@ -102,7 +111,7 @@ namespace ThreeDISevenZeroR.SensorKit
         }
         
         /// <summary>
-        /// Actual distance of cast, with respect of object scale
+        /// <para>Actual distance of cast, with respect of object scale</para>
         /// </summary>
         public float CastDistance
         {
@@ -158,7 +167,7 @@ namespace ThreeDISevenZeroR.SensorKit
 
 #if UNITY_EDITOR
 
-        private RaycastHit[] gizmoRayHits = emptyRays;
+        private RaycastHit[] gizmoRayHits = emptyRayHits;
 
         private void OnDrawGizmosSelected()
         {

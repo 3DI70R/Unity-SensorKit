@@ -3,19 +3,21 @@
 namespace ThreeDISevenZeroR.SensorKit
 {
     /// <summary>
-    /// Sensor which checks for colliders inside its volume, sphere or capsule, depending on your settings.
-    /// Behaves like a Physics.OverlapSphereNonAlloc, Physics.OverlapCapsuleNonAlloc respectively
+    /// <para>Sensor which checks for colliders inside its volume, sphere or capsule, depending on your settings.<para>
+    /// <para>Behaves like a Physics.OverlapSphereNonAlloc, Physics.OverlapCapsuleNonAlloc respectively<para>
     /// </summary>
     public class SphereOverlapSensor : OverlapSensor
     {
         /// <summary>
-        /// Radius of sphere
+        /// <para>Radius of sphere</para>
         /// </summary>
+        [Tooltip("Radius of sphere")]
         public float radius;
 
         /// <summary>
-        /// With of sphere, when non zero, makes this sensor behave like a capsule
+        /// <para>Width of sphere, when non zero, makes this sensor behave like a capsule</para>
         /// </summary>
+        [Tooltip("Width of sphere, when non zero, makes this sensor behave like a capsule")]
         public float width;
 
         protected override int DoOverlapCheck(Vector3 center, Collider[] colliders)

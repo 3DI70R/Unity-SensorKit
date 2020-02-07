@@ -3,10 +3,14 @@
 namespace ThreeDISevenZeroR.SensorKit
 {
     /// <summary>
-    /// Sensor which checks for colliders inside its volume, behaves like a Physics.OverlapBox
+    /// <para>Sensor which checks for colliders inside its volume, behaves like a Physics.OverlapBox</para>
     /// </summary>
     public class BoxOverlapSensor : OverlapSensor
     {
+        /// <summary>
+        /// <para>Half extents of box</para>
+        /// </summary>
+        [Tooltip("Half extents of box")]
         public Vector3 halfExtents;
 
         protected override int DoOverlapCheck(Vector3 center, Collider[] colliders)
