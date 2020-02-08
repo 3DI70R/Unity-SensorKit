@@ -1,4 +1,7 @@
 ![Logo](Images/SensorKitLogo.gif)
+
+[![openupm](https://img.shields.io/npm/v/ru.threedisevenzeror.sensorkit?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/ru.threedisevenzeror.sensorkit/)
+
 Утилитарные компоненты для работы с Raycast'ами как с игровыми обьектами
 
 # Зачем нужна
@@ -32,7 +35,7 @@ public class SensorTest : MonoBehaviour
     public void Update()
     {
         groundSensor.UpdateSensor();
-        
+
         if (groundSensor.HasHit)
         {
             var normal = groundSensor.RayHit.normal;
@@ -67,7 +70,7 @@ Unity **2018.1** или выше
 
 # Установка
 
-* **Git**: 
+* **Git**:
     В случае если у вас версия Unity 2018.1 и выше и установлен git, можете добавить строчку в **Packages\manifest.json**
     ```
     "ru.threedisevenzeror.sensorkit": "https://github.com/3DI70R/SensorKit.git"

@@ -1,5 +1,7 @@
 ![Logo](Images/SensorKitLogo.gif)
 
+[![openupm](https://img.shields.io/npm/v/ru.threedisevenzeror.sensorkit?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/ru.threedisevenzeror.sensorkit/)
+
 Utility components for working with Raycasts using GameObjects
 
 # What is this
@@ -87,6 +89,11 @@ At least Unity **2018.1** or higher. **2019.1** is required for overriding Physi
 
 # Installation
 
+* **OpenUPM**: 
+    The package is available on the [openupm registry](https://openupm.com). It's recommended to install it via [openupm-cli](https://github.com/openupm/openupm-cli).
+    ```
+    openupm add com.littlebigfun.addressable-importer
+    ```
 * **Git (2018.3+)**: 
     If git is installed, you can add following entry in **Packages\manifest.json**
     ```
