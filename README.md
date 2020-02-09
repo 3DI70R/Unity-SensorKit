@@ -1,4 +1,5 @@
 ![Logo](Images/SensorKitLogo.gif)
+[![openupm](https://img.shields.io/npm/v/ru.threedisevenzeror.sensorkit?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/ru.threedisevenzeror.sensorkit/)
 
 Utility components for working with Raycasts using GameObjects
 
@@ -86,7 +87,6 @@ Sensor **is not updated automatically**, you need to call `UpdateSensor()` for t
 At least Unity **2018.1** or higher. **2019.1** is required for overriding PhysicsScene
 
 # Installation
-
 * **Git (2018.3+)**: 
     If git is installed, you can add following entry in **Packages\manifest.json**
     ```
@@ -95,6 +95,11 @@ At least Unity **2018.1** or higher. **2019.1** is required for overriding Physi
     And all these scripts will be included in your project as dependency.
 * **Local Package (2018.3+):**
     Just download this repository as ZIP, extract, and then add it via "Add package from disk..." from Package Manager
+* **OpenUPM**: 
+    The package is available on the [openupm registry](https://openupm.com). It's recommended to install it via [openupm-cli](https://github.com/openupm/openupm-cli).
+    ```
+    openupm add ru.threedisevenzeror.sensorkit
+    ```
 
 Otherwise, you can just copy files from `Assets/Scripts/Runtime` to your project.
 

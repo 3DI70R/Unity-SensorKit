@@ -1,4 +1,6 @@
 ![Logo](Images/SensorKitLogo.gif)
+[![openupm](https://img.shields.io/npm/v/ru.threedisevenzeror.sensorkit?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/ru.threedisevenzeror.sensorkit/)
+
 Утилитарные компоненты для работы с Raycast'ами как с игровыми обьектами
 
 # Зачем нужна
@@ -76,6 +78,11 @@ Unity **2018.1** или выше
 
 * **Как пакет**:
 Просто скачайте этот репозиторий как Zip, распакуйте, и в Package Manager'е выберите "Add package from disk..." указав "package.json"
+* **OpenUPM**: 
+    Пакет так же доступен в [репозитории OpenUPM](https://openupm.com). Можно установить его через [openupm-cli](https://github.com/openupm/openupm-cli).
+    ```
+    openupm add ru.threedisevenzeror.sensorkit
+    ```
 
 В противном случае, можно просто скопировать файлы из `Assets/Scripts/Runtime` и вставить в проект, некрасиво, лениво, зато быстро
 
