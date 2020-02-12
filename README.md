@@ -120,3 +120,5 @@ Otherwise, you can just copy files from `Assets/Scripts/Runtime` to your project
     - Improvement: Hit information window style update, also now it doesn't clip out of view
     - Improvement: Vertex caching for hit information overlay
     - Improvement: "Lazy Allocation" now readonly, non keyable and can be set only from inspector, because it is used only during component initialization
+* 1.1.4
+    - Bugfix: Out of bounds exception when triangle highlight gizmo tries to display triangle on convex mesh (triangleIndex is -1 in this case)

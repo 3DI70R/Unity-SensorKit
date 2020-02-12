@@ -82,8 +82,13 @@ namespace ThreeDISevenZeroR.SensorKit
         public static void HighlightMeshVertices(RaycastHit hit)
         {
             var meshCollider = hit.collider as MeshCollider;
+            
             if (meshCollider != null)
             {
+                // Convex
+                if(hit.triangleIndex == -1)
+                    return;
+                
                 var mesh = meshCollider.sharedMesh;
 
                 if (mesh != lastInspectedMesh)
