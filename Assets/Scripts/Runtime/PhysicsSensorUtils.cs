@@ -120,7 +120,7 @@ namespace ThreeDISevenZeroR.SensorKit
             }
         }
 
-        public static void DrawHitInfo(RaycastHit hit)
+        public static void DrawHitInfo(RaycastHit hit, Vector3 position)
         {
             if (hit.collider == null)
                 return;
@@ -131,7 +131,7 @@ namespace ThreeDISevenZeroR.SensorKit
             if (sceneCamera == null)
                 return;
             
-            var offset = sceneCamera.WorldToScreenPoint(hit.point);
+            var offset = sceneCamera.WorldToScreenPoint(position);
 
             if (offset.z > 0)
             {

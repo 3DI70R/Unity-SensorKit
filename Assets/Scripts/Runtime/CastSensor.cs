@@ -199,7 +199,7 @@ namespace ThreeDISevenZeroR.SensorKit
                     PhysicsSensorUtils.DrawNormal(gizmoHit);
                     PhysicsSensorUtils.DrawCollisionPoints(collisionPoint, gizmoHit);
                     PhysicsSensorUtils.HighlightMeshVertices(gizmoHit);
-                    PhysicsSensorUtils.DrawHitInfo(gizmoHit);
+                    PhysicsSensorUtils.DrawHitInfo(gizmoHit, collisionPoint);
                 }
             }
             else
